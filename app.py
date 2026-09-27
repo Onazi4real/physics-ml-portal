@@ -39,19 +39,20 @@ with tab1:
             depth_log = np.log1p(raw_depth)
             
             # Construct the complete 36-feature row matching your exact training template
-            # Uses statistical medians derived directly from the cumulative dataset
+            # 'koi_score' is dropped. The exact columns seen during model fitting are restored:
             exo_data = {
-                'koi_score': [0.334], 'koi_time0bk': [137.2], 'koi_time0bk_err1': [0.0], 'koi_time0bk_err2': [0.0],
-                'koi_impact': [0.537], 'koi_impact_err1': [0.0], 'koi_impact_err2': [0.0], 'koi_duration': [3.73],
-                'koi_duration_err1': [0.0], 'koi_duration_err2': [0.0], 'koi_depth_err1': [0.0], 'koi_depth_err2': [0.0],
-                'koi_prad': [2.42], 'koi_prad_err1': [0.0], 'koi_prad_err2': [0.0], 'koi_teq': [888.0],
-                'koi_insol': [146.9], 'koi_insol_err1': [0.0], 'koi_insol_err2': [0.0], 'koi_model_snr': [23.9],
-                'koi_tce_plnt_num': [1.0], 'koi_steff': [5757.0], 'koi_steff_err1': [0.0], 'koi_steff_err2': [0.0],
-                'koi_slogg': [4.43], 'koi_slogg_err1': [0.0], 'koi_slogg_err2': [0.0], 'koi_srad': [0.96],
-                'koi_srad_err1': [0.0], 'koi_srad_err2': [0.0], 'ra': [292.26], 'dec': [43.67],
-                'koi_kepmag': [kep_mag], 'koi_period_log': [period_log], 'koi_depth_log': [depth_log]
+                'koi_fpflag_nt': [0.0], 'koi_fpflag_ss': [0.0], 'koi_fpflag_co': [0.0], 'koi_fpflag_ec': [0.0],
+                'koi_period_err1': [0.0], 'koi_period_err2': [0.0], 'koi_time0bk': [137.2], 'koi_time0bk_err1': [0.0],
+                'koi_time0bk_err2': [0.0], 'koi_impact': [0.537], 'koi_impact_err1': [0.0], 'koi_impact_err2': [0.0],
+                'koi_duration': [3.73], 'koi_duration_err1': [0.0], 'koi_duration_err2': [0.0], 'koi_depth_err1': [0.0],
+                'koi_depth_err2': [0.0], 'koi_prad': [2.42], 'koi_prad_err1': [0.0], 'koi_prad_err2': [0.0],
+                'koi_teq': [888.0], 'koi_insol': [146.9], 'koi_insol_err1': [0.0], 'koi_insol_err2': [0.0],
+                'koi_model_snr': [23.9], 'koi_tce_plnt_num': [1.0], 'koi_steff': [5757.0], 'koi_steff_err1': [0.0],
+                'koi_steff_err2': [0.0], 'koi_slogg': [4.43], 'koi_slogg_err1': [0.0], 'koi_slogg_err2': [0.0],
+                'koi_srad': [0.96], 'koi_srad_err1': [0.0], 'koi_srad_err2': [0.0], 'ra': [292.26],
+                'dec': [43.67], 'koi_kepmag': [kep_mag], 'koi_period_log': [period_log], 'koi_depth_log': [depth_log]
             }
-            
+
             X_exo = pd.DataFrame(exo_data)
             
             # Normalize and Predict
