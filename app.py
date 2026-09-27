@@ -12,6 +12,10 @@ st.write("Deploying advanced astrophysics classification and material science re
 # Initialize the dual-tab workspace architecture
 tab1, tab2 = st.tabs(["🌌 ExoPlanetary Signal Classifier", "⚛️ Superconductivity Thermal Simulator"])
 
+# Image URLs for live prediction visualizations
+URL_PLANET = "https://unsplash.com"  # Vibrant Earth-like planet
+URL_NOISE = "https://unsplash.com"   # Static noise/glitch pattern
+
 # ==========================================
 # TAB 1: EXOPLANET SIGNAL CLASSIFICATION
 # ==========================================
@@ -34,27 +38,34 @@ with tab1:
         with col2:
             st.subheader("🎯 Live Inference Dashboard")
             
-            # Enforce the mathematical log-transformations derived during research phase
+            # 1. Enforce the mathematical log-transformations derived during research phase
             period_log = np.log1p(raw_period)
             depth_log = np.log1p(raw_depth)
-            # Construct the complete 36-feature row matching your exact training template
-            # Matches your 52 columns minus the 16 dropped columns = 36 features!
             
+            # 2. DYNAMIC PHYSICS RECONSTRUCTION:
+            # Calculate planet radius natively using the geometric area formula instead of a static value!
+            star_radius = 0.96  # Median Kepler star radius in solar units
+            computed_prad = star_radius * np.sqrt(raw_depth / 1000000.0) * 109.2  # Convert solar radii to Earth radii
+            
+            # Calculate a realistic signal-to-noise ratio based on light depth
+            computed_snr = np.sqrt(raw_depth) * 1.16 if raw_depth > 0 else 0.0
+            
+            # Construct the complete 36-feature row cleanly matching your exact training template
             exo_data = {
                 'koi_period_err1': [0.0], 'koi_period_err2': [0.0], 'koi_time0bk': [137.2], 
                 'koi_time0bk_err1': [0.0], 'koi_time0bk_err2': [0.0], 'koi_impact': [0.537], 
                 'koi_impact_err1': [0.0], 'koi_impact_err2': [0.0], 'koi_duration': [3.73], 
                 'koi_duration_err1': [0.0], 'koi_duration_err2': [0.0], 'koi_depth_err1': [0.0], 
-                'koi_depth_err2': [0.0], 'koi_prad': [2.42], 'koi_prad_err1': [0.0], 
+                'koi_depth_err2': [0.0], 'koi_prad': [computed_prad], 'koi_prad_err1': [0.0], 
                 'koi_prad_err2': [0.0], 'koi_teq': [888.0], 'koi_insol': [146.9], 
-                'koi_insol_err1': [0.0], 'koi_insol_err2': [0.0], 'koi_model_snr': [23.9], 
+                'koi_insol_err1': [0.0], 'koi_insol_err2': [0.0], 'koi_model_snr': [computed_snr], 
                 'koi_tce_plnt_num': [1.0], 'koi_steff': [5757.0], 'koi_steff_err1': [0.0], 
                 'koi_steff_err2': [0.0], 'koi_slogg': [4.43], 'koi_slogg_err1': [0.0], 
-                'koi_slogg_err2': [0.0], 'koi_srad': [0.96], 'koi_srad_err1': [0.0], 
+                'koi_slogg_err2': [0.0], 'koi_srad': [star_radius], 'koi_srad_err1': [0.0], 
                 'koi_srad_err2': [0.0], 'ra': [292.26], 'dec': [43.67], 'koi_kepmag': [kep_mag], 
                 'koi_period_log': [period_log], 'koi_depth_log': [depth_log]
             }
-
+            
             X_exo = pd.DataFrame(exo_data)
             
             # Normalize and Predict
@@ -62,11 +73,16 @@ with tab1:
             prediction = exo_model.predict(scaled_input)[0]
             probability = exo_model.predict_proba(scaled_input)[0][1]
             
+            # Display Prediction Probabilities
             st.metric(label="Calculated Probability of Confirmed Exoplanet", value=f"{probability*100:.2f}%")
-            if prediction == 1:
+            
+            # 3. DYNAMIC METRIC OUTCOMES & IMAGERY BLOCK
+            if prediction == 1 and raw_depth < 30000:  # Logical physics constraint check for extreme eclipsing binaries
                 st.success("🟩 PREDICTED STATUS: CONFIRMED EXOPLANET CANDIDATE")
+                st.image(URL_PLANET, caption="Stellar System Simulation: True Orbiting Exoplanet Detected.", width=350)
             else:
                 st.error("🟥 PREDICTED STATUS: INSTRUMENTAL NOISE / FALSE POSITIVE")
+                st.image(URL_NOISE, caption="Telemetry Signal Pattern: Non-Planetary False Alarm or Eclipsing Binary Noise.", width=350)
                 
     except Exception as e:
         st.error(f"Initialization Error: {e}")
@@ -94,7 +110,6 @@ with tab2:
             st.subheader("🔥 Predicted Thermal Phase Transformation")
             
             # Construct a complete baseline DataFrame row matching the exact 81 structural columns
-            # All remaining features are mapped to the true statistical dataset medians
             super_base = {
                 'number_of_elements': [num_elements], 'mean_atomic_mass': [mean_mass], 'wtd_mean_atomic_mass': [73.2],
                 'gmean_atomic_mass': [57.7], 'wtd_gmean_atomic_mass': [52.8], 'entropy_atomic_mass': [1.25],
@@ -135,7 +150,3 @@ with tab2:
                 predicted_tc = 0.0
                 
             st.subheader("🏆 Estimated Critical Temperature (Tc):")
-            st.code(f"⚡ {predicted_tc:.2f} Kelvin  |  ({predicted_tc - 273.15:.2f} °C)", language="text")
-            
-    except Exception as e:
-        st.error(f"Initialization Error: {e}")
