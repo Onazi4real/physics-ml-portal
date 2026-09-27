@@ -70,11 +70,11 @@ with tab1:
             
             # Normalize and Predict
             scaled_input = exo_scaler.transform(X_exo)
-            prediction = exo_model.predict(scaled_input)[0]
-            probability = exo_model.predict_proba(scaled_input)[0][1]
+            prediction = exo_model.predict(scaled_input)
+            probability = exo_model.predict_proba(scaled_input)
             
             # Display Prediction Probabilities
-            st.metric(label="Calculated Probability of Confirmed Exoplanet", value=f"{probability*100:.2f}%")
+            st.metric(label="Calculated Probability of Confirmed Exoplanet", value=f"{probability[0][1]*100:.2f}%")
             
             # 3. DYNAMIC METRIC OUTCOMES & IMAGERY BLOCK
             if prediction == 1 and raw_depth < 30000:  # Logical physics constraint check for extreme eclipsing binaries
@@ -85,7 +85,7 @@ with tab1:
                 st.image(URL_NOISE, caption="Telemetry Signal Pattern: Non-Planetary False Alarm or Eclipsing Binary Noise.", width=350)
                 
     except Exception as e:
-        st.error(f"Initialization Error: {e}")
+        st.error(f"Initialization Error in Tab 1: {e}")
 
 # ==========================================
 # TAB 2: SUPERCONDUCTIVITY THERMAL SIMULATOR
